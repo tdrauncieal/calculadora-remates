@@ -1,29 +1,18 @@
-# Calculadora de Remates (PWA)
+CALCULADORA DE REMATES - PWA
 
-## Contenido
-- Calculadora responsive para iPhone y escritorio.
-- Cinco vehículos precargados con precios base.
-- Cálculo de seña, honorarios, aporte, saldo y costo total.
-- Gastos adicionales editables.
-- Límite de puja según valor de mercado y descuento objetivo.
-- Guarda los datos localmente en el navegador.
-- Service worker para funcionamiento offline después de la primera carga.
+Publicación:
+1. Descomprimir el ZIP.
+2. Subir TODOS los archivos de esta carpeta a la raíz del repositorio GitHub.
+3. GitHub > Settings > Pages > Deploy from a branch > main > /(root).
+4. Abrir la URL de GitHub Pages en Safari y Añadir a pantalla de inicio.
 
-## Publicación para instalar en iPhone
-La instalación PWA en iPhone requiere servir los archivos por HTTPS (o localhost para pruebas).
-1. Subí el contenido de esta carpeta a un hosting estático HTTPS (por ejemplo GitHub Pages o Netlify).
-2. Abrí la URL en Safari del iPhone.
-3. Tocá Compartir > Añadir a pantalla de inicio.
-4. Abrí desde el nuevo ícono. Después de la primera carga, los recursos quedan disponibles offline.
+Referencia de mercado:
+- market-values.json contiene estadísticas calculadas desde market_radar.db.
+- Snapshots: 04/11/2026.
+- Precios en ARS; publicaciones en USD convertidas a ARS a 1.500 ARS/USD.
+- Son precios publicados, no precios de operaciones cerradas.
+- Mediana y rango basados en comparables por versión, combustible y kilometraje.
+- Revisar notas de calidad de muestra, especialmente Tracker y Sonic.
 
-Abrir index.html directamente desde Archivos no instala la PWA ni habilita el service worker.
-
-## Fórmulas
-- Aporte = oferta × honorarios% × aporte% (6% de honorarios).
-- Pago inicial = seña + honorarios + aporte.
-- Saldo = oferta × (1 - seña%).
-- Costo adquisición = oferta + honorarios + aporte.
-- Costo completo = adquisición + reparaciones + patentamiento + GNC + seguro + otros + reserva.
-- Puja máxima = (mercado × (1 - descuento) - gastos adicionales) / (1 + honorarios% × (1 + aporte%)).
-
-Los porcentajes y los valores son editables. Verificar siempre el pliego oficial vigente.
+La app guarda la configuración localmente en cada dispositivo (localStorage).
+Los datos no se sincronizan automáticamente entre dispositivos.

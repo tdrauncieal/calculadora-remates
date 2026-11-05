@@ -1,0 +1,77 @@
+{
+  "source": {
+    "database": "market_radar.db",
+    "snapshot_date": "2026-11-04",
+    "currency": "ARS",
+    "usd_ars": 1500,
+    "method": "Mediana de precios publicados; USD convertido a ARS a 1.500; comparables del mismo año/versión/motor/combustible y kilometraje dentro de ±25.000 km. Se prioriza AMBA cuando hay al menos 3 avisos; si no, se usa cobertura nacional.",
+    "warning": "Son precios de publicación, no precios de operaciones cerradas."
+  },
+  "vehicles": {
+    "sonic": {
+      "market": 12500000,
+      "count": 2,
+      "min": 12500000,
+      "max": 12500000,
+      "q1": 12500000,
+      "q3": 12500000,
+      "km_min": 119000,
+      "km_max": 129000,
+      "scope": "Nacional",
+      "filter": "Sonic LTZ 1.6 automática, nafta, año 2015; ±25.000 km.",
+      "note": "Muestra muy pequeña (2 avisos); en AMBA había solo 1 comparable, por eso se amplió a cobertura nacional."
+    },
+    "ecosport": {
+      "market": 20250000,
+      "count": 3,
+      "min": 17500000,
+      "max": 22200000,
+      "q1": 18875000,
+      "q3": 21225000,
+      "km_min": 72000,
+      "km_max": 95000,
+      "scope": "AMBA",
+      "filter": "EcoSport Freestyle 1.5 manual, nafta, año 2017; ±25.000 km.",
+      "note": "Solo 3 comparables; tomar como referencia orientativa. Se excluyeron 1.6, 2.0 y avisos con GNC."
+    },
+    "tracker": {
+      "market": 18000000,
+      "count": 11,
+      "min": 15500000,
+      "max": 20500000,
+      "q1": 17500000,
+      "q3": 19275000,
+      "km_min": 75000,
+      "km_max": 110000,
+      "scope": "AMBA",
+      "filter": "Tracker LTZ con FWD/4x2 explícito, nafta, año 2017; ±25.000 km.",
+      "note": "Referencia provisoria: los títulos y el campo transmisión se contradicen en varios avisos (por ejemplo, 'FWD MT' con transmisión registrada como automática). No se pudo separar con seguridad manual y automática."
+    },
+    "p208-2016": {
+      "market": 15150000,
+      "count": 24,
+      "min": 13000000,
+      "max": 18750000,
+      "q1": 14437500,
+      "q3": 15918750,
+      "km_min": 102900,
+      "km_max": 150000,
+      "scope": "AMBA",
+      "filter": "Peugeot 208 Feline 1.6 manual, nafta, año 2016; ±25.000 km.",
+      "note": "Se filtraron avisos Feline; se excluyeron Allure, Active, GT y versiones Tiptronic."
+    },
+    "p208-2022": {
+      "market": 23900000,
+      "count": 52,
+      "min": 17000000,
+      "max": 28500000,
+      "q1": 23175000,
+      "q3": 24925000,
+      "km_min": 22000,
+      "km_max": 71000,
+      "scope": "AMBA",
+      "filter": "Peugeot 208 Feline 1.6 Tiptronic automática, nafta, año 2022; ±25.000 km.",
+      "note": "Se filtraron Feline Tiptronic; se excluyeron versiones manuales, otras versiones y avisos con GNC."
+    }
+  }
+}

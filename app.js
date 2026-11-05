@@ -6,8 +6,28 @@ const ids=["vehicle","offer","depositRate","commissionRate","contributionRate","
 const $=id=>document.getElementById(id);
 const fmt=n=>new Intl.NumberFormat("es-AR",{style:"currency",currency:"ARS",maximumFractionDigits:0}).format(Math.round(Number.isFinite(n)?n:0));
 const num=id=>Math.max(0,Number($(id).value)||0);
+let marketData=null;
 function save(){const state={};ids.forEach(id=>state[id]=$(id).value);try{localStorage.setItem("remates-state",JSON.stringify(state));}catch(e){}}
 function load(){try{const s=JSON.parse(localStorage.getItem("remates-state")||"{}");ids.forEach(id=>{if(s[id]!==undefined)$(id).value=s[id];});}catch(e){}}
+function currentMarket(){return marketData?.vehicles?.[$("vehicle").value]||null;}
+function setMarketReference(force=false){
+ const m=currentMarket();
+ if(!m)return;
+ if(force || num("market")===0) $("market").value=m.market;
+ const note=m.note ? " "+m.note : "";
+ $("marketMeta").textContent=`Mediana ${fmt(m.market)} · ${m.count} avisos · ${m.scope} · ${m.km_min.toLocaleString("es-AR")}–${m.km_max.toLocaleString("es-AR")} km. Rango publicado: ${fmt(m.min)}–${fmt(m.max)}.${note}`;
+}
+async function loadMarketData(){
+ try{
+  const r=await fetch("./market-values.json",{cache:"no-store"});
+  if(!r.ok)throw new Error("No se pudo cargar la referencia");
+  marketData=await r.json();
+  setMarketReference(false);
+  calculate();
+ }catch(e){
+  $("marketMeta").textContent="No se pudo cargar el archivo de referencias. Podés ingresar el valor manualmente.";
+ }
+}
 function calculate(){
  const offer=num("offer"), depRate=num("depositRate")/100, commRate=num("commissionRate")/100, contribRate=num("contributionRate")/100;
  const deposit=offer*depRate, commission=offer*commRate, contribution=commission*contribRate;
@@ -31,10 +51,12 @@ function calculate(){
  save();
 }
 load();
-$("vehicle").addEventListener("change",()=>{$("offer").value=vehicles[$("vehicle").value].base;calculate();});
+$("vehicle").addEventListener("change",()=>{$("offer").value=vehicles[$("vehicle").value].base;setMarketReference(true);calculate();});
 ids.filter(id=>id!=="vehicle").forEach(id=>$(id).addEventListener("input",calculate));
+$("useMarket").addEventListener("click",()=>{setMarketReference(true);calculate();});
 document.querySelectorAll("[data-add]").forEach(b=>b.addEventListener("click",()=>{$("offer").value=Math.max(0,num("offer")+Number(b.dataset.add));calculate();}));
 $("useBase").addEventListener("click",()=>{$("offer").value=vehicles[$("vehicle").value].base;calculate();});
 $("roundOffer").addEventListener("click",()=>{$("offer").value=Math.round(num("offer")/100000)*100000;calculate();});
 calculate();
+loadMarketData();
 if("serviceWorker" in navigator && location.protocol.startsWith("http"))window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));

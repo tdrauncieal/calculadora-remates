@@ -66,7 +66,7 @@
       <div><label for="gnc">GNC</label><input id="gnc" type="number" inputmode="numeric" value="0"></div>
       <div><label for="insurance">Seguro inicial</label><input id="insurance" type="number" inputmode="numeric" value="0"></div>
       <div><label for="other">Otros gastos</label><input id="other" type="number" inputmode="numeric" value="0"></div>
-      <div><label for="market">Valor de mercado comparable</label><input id="market" type="number" inputmode="numeric" value="0"></div>
+      <div class="market-field"><label for="market">Valor de mercado comparable (ARS)</label><input id="market" type="number" inputmode="numeric" value="0"><div id="marketMeta" class="market-meta">Referencia de Mercado Libre.</div><button id="useMarket" class="secondary market-button" type="button">Usar mediana estimada</button></div>
     </div>
     <div class="two target">
       <div><label for="discount">Descuento objetivo (%)</label><input id="discount" type="number" min="0" max="90" step="1" value="20"></div>
@@ -93,7 +93,8 @@
   <section class="panel">
     <div class="section-title">Límite según descuento de mercado</div>
     <div class="limit" id="maxBid">Ingresá un valor de mercado para calcularlo.</div>
-    <p class="hint">La puja máxima se calcula descontando del valor de mercado el descuento objetivo y los gastos adicionales cargados, y luego dividiendo por el factor de cargos del remate. No incluye reserva adicional dentro del descuento salvo que la cargues como otro gasto.</p>
+    <p class="hint">La puja máxima se calcula descontando del valor de mercado el descuento objetivo y los gastos adicionales cargados, y luego dividiendo por el factor de cargos del remate.</p>
+    <p class="hint">La referencia es una mediana de avisos publicados de Mercado Libre (snapshot 04/11/2026), no un precio de venta confirmado. Podés modificarla manualmente.</p>
     <div id="status" class="status neutral">Sin valor de mercado comparable.</div>
   </section>
 
