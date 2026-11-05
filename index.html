@@ -66,7 +66,7 @@
       <div>
         <label for="registration">Patentamiento / inscripción (90 MRPA)</label>
         <input id="registration" type="number" inputmode="numeric" value="0" readonly>
-        <p class="field-hint">Se calcula automáticamente a partir del valor de MRPA.</p>
+        <p class="field-hint">Se calcula como 90 MRPA (arancel fijo estimado para inscripción de subastado). Los tributos adicionales sobre valuación fiscal deben cargarse cuando se confirme su importe.</p>
       </div>
       <div>
         <label for="mrpaValue">Valor vigente de 1 MRPA (ARS)</label>
@@ -75,15 +75,26 @@
       <div><label for="gnc">GNC</label><input id="gnc" type="number" inputmode="numeric" value="0"></div>
       <div><label for="insurance">Seguro inicial</label><input id="insurance" type="number" inputmode="numeric" value="0"></div>
       <div><label for="other">Otros gastos</label><input id="other" type="number" inputmode="numeric" value="0"></div>
-      <div class="market-field"><label for="market">Valor de mercado comparable (ARS)</label><input id="market" type="number" inputmode="numeric" value="0"><div id="marketMeta" class="market-meta">Referencia de Mercado Libre.</div><button id="useMarket" class="secondary market-button" type="button">Usar mediana estimada</button></div>
+      <div><label for="reserve">Reserva adicional</label><input id="reserve" type="number" inputmode="numeric" value="0"></div>
     </div>
     <div class="two target">
       <div>
-        <label for="fiscalValue">Valuación fiscal DNRPA (ARS)</label>
+        <label for="fiscalValue">Valuación fiscal DNRPA para patentamiento (ARS)</label>
         <input id="fiscalValue" type="number" inputmode="numeric" min="0" step="100" value="0">
-        <p id="fiscalMeta" class="field-hint">Valor de referencia DNRPA. EcoSport 1.5: sin valor 2017 identificado en la tabla.</p>
+        <p id="fiscalMeta" class="field-hint">Base fiscal de referencia exclusiva para estimar el patentamiento. No se utiliza como valor de mercado.</p>
       </div>
-      <div><label for="reserve">Reserva adicional</label><input id="reserve" type="number" inputmode="numeric" value="0"></div>
+      <div>
+        <label>Base de cálculo comercial</label>
+        <p class="field-hint">La evaluación económica y la puja máxima usan únicamente el valor de mercado comparable obtenido del SQLite / Mercado Libre.</p>
+      </div>
+    </div>
+    <div class="market-field market-reference-panel">
+      <div class="section-title">Valor de mercado para evaluar la compra</div>
+      <label for="market">Valor de mercado comparable (ARS)</label>
+      <input id="market" type="number" inputmode="numeric" value="0">
+      <div id="marketMeta" class="market-meta">Referencia calculada desde SQLite / Mercado Libre.</div>
+      <button id="useMarket" class="secondary market-button" type="button">Usar mediana estimada</button>
+      <p class="field-hint">Este es el único valor utilizado para medir la conveniencia de la compra y calcular la puja máxima. La valuación fiscal DNRPA no lo reemplaza ni lo modifica.</p>
     </div>
     <div class="discount-adjust-panel">
       <label for="discount">Descuento objetivo (%)</label>
@@ -129,7 +140,7 @@
   </section>
 </main>
 <footer>
-  Calculadora local · Versión <strong id="appVersion">10.0.0</strong> · Los datos se guardan en este dispositivo.
+  Calculadora local · Versión <strong id="appVersion">11.0.0</strong> · Los datos se guardan en este dispositivo.
   <p class="field-hint">El botón «Borrar datos locales» elimina las configuraciones guardadas en este dispositivo, pero no desinstala la aplicación.</p>
 </footer>
 <script src="app.js"></script>

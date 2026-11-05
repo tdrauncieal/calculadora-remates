@@ -12,7 +12,7 @@ let marketData=null;
 let activeVehicle=null;
 let defaults={};
 let vehicleStates={};
-const APP_VERSION="10.0.0";
+const APP_VERSION="11.0.0";
 const fiscalDefaults={
  sonic:7697200,
  ecosport:0,
@@ -75,7 +75,7 @@ function updateFiscalMeta(){
  const key=$("vehicle").value;
  const value=Number($("fiscalValue").value)||0;
  const sourceDate="01/11/2026";
- $("fiscalMeta").textContent=value>0?`Valor de tabla DNRPA (vigencia ${sourceDate}). Editable; no se suma automáticamente a los gastos.`:"Sin valuación identificada para esta versión/año en la tabla DNRPA. Cargar manualmente cuando se confirme.";
+ $("fiscalMeta").textContent=value>0?`Base fiscal de referencia DNRPA (vigencia ${sourceDate}). Se reserva exclusivamente para el cálculo de patentamiento; no interviene en la evaluación comercial.`:"Sin valuación identificada para esta versión/año en la tabla DNRPA. Cargar manualmente cuando se confirme; se utilizará exclusivamente para patentamiento.";
 }
 function setMarketReference(force=false){
  const m=currentMarket();
