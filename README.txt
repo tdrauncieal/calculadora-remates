@@ -32,3 +32,7 @@ La aplicacion compara dos escenarios del Anexo I:
 A) 1% de la mayor base estimada (oferta + cargos del remate o valuacion oficial), con minimo de 52 MRPA.
 B) 90 MRPA para automotores armados fuera de fabrica/subastados.
 Ingresar el valor vigente de una MRPA y, si se conoce, la valuacion oficial. Los botones permiten copiar el importe de cada escenario al campo Patentamiento/tramites. Es una estimacion para comparar: confirmar con el Registro el encuadre aplicable y los conceptos que integran la base.
+
+
+INSCRIPCION INICIAL
+Para estimar patentamiento/inscripcion se tomara provisoriamente el encuadre de automotor subastado: 90 MRPA. El importe en pesos se carga manualmente en "Patentamiento / inscripcion". Confirmar con el Registro el encuadre y el valor vigente de MRPA antes de cerrar el presupuesto.
