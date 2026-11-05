@@ -2,14 +2,61 @@ const vehicles={
  sonic:{base:7500000},ecosport:{base:11600000},tracker:{base:12000000},
  "p208-2016":{base:12500000},"p208-2022":{base:18000000}
 };
-const ids=["vehicle","offer","depositRate","commissionRate","contributionRate","usdRate","repairs","registration","gnc","insurance","other","market","discount","reserve"];
+const ids=["offer","depositRate","commissionRate","contributionRate","usdRate","repairs","registration","gnc","insurance","other","market","discount","reserve"];
 const $=id=>document.getElementById(id);
 const fmt=n=>new Intl.NumberFormat("es-AR",{style:"currency",currency:"ARS",maximumFractionDigits:0}).format(Math.round(Number.isFinite(n)?n:0));
 const num=id=>Math.max(0,Number($(id).value)||0);
+const STORAGE_KEY="remates-vehicles-state";
+const SELECTED_KEY="remates-selected-vehicle";
 let marketData=null;
-function save(){const state={};ids.forEach(id=>state[id]=$(id).value);try{localStorage.setItem("remates-state",JSON.stringify(state));}catch(e){}}
-function load(){try{const s=JSON.parse(localStorage.getItem("remates-state")||"{}");ids.forEach(id=>{if(s[id]!==undefined)$(id).value=s[id];});}catch(e){}}
+let activeVehicle=null;
+let defaults={};
+let vehicleStates={};
+
+function readStorage(){
+ ids.forEach(id=>defaults[id]=$(id).value);
+ try{
+  vehicleStates=JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}");
+  if(!vehicleStates||typeof vehicleStates!=="object"||Array.isArray(vehicleStates))vehicleStates={};
+  // Migración: la configuración anterior era única y global. Se asigna al vehículo
+  // que estaba seleccionado, conservando los valores que el usuario ya había cargado.
+  const old=JSON.parse(localStorage.getItem("remates-state")||"null");
+  const selected=localStorage.getItem(SELECTED_KEY)||$("vehicle").value;
+  if(old&&!vehicleStates[selected]){
+   const migrated={};
+   ids.forEach(id=>{if(old[id]!==undefined)migrated[id]=String(old[id]);});
+   vehicleStates[selected]=migrated;
+   localStorage.setItem(STORAGE_KEY,JSON.stringify(vehicleStates));
+  }
+  activeVehicle=vehicles[ selected ] ? selected : $("vehicle").value;
+  $("vehicle").value=activeVehicle;
+ }catch(e){activeVehicle=$("vehicle").value;vehicleStates={};}
+ loadVehicle(activeVehicle);
+}
+function saveVehicle(){
+ if(!activeVehicle)return;
+ const state={};
+ ids.forEach(id=>state[id]=$(id).value);
+ vehicleStates[activeVehicle]=state;
+ try{
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(vehicleStates));
+  localStorage.setItem(SELECTED_KEY,activeVehicle);
+ }catch(e){}
+}
+function loadVehicle(key){
+ const state=vehicleStates[key]||{};
+ ids.forEach(id=>$(id).value=state[id]!==undefined?state[id]:defaults[id]);
+ if(!vehicleStates[key]){
+  $("offer").value=vehicles[key].base;
+  const market=currentMarket();
+  if(market)$("market").value=market.market;
+ }
+ setMarketReference(false);
+ updateBasePrice();
+ calculate();
+}
 function currentMarket(){return marketData?.vehicles?.[$("vehicle").value]||null;}
+function updateBasePrice(){$("basePrice").textContent=fmt(vehicles[$("vehicle").value].base);}
 function setMarketReference(force=false){
  const m=currentMarket();
  if(!m)return;
@@ -22,7 +69,10 @@ async function loadMarketData(){
   const r=await fetch("./market-values.json",{cache:"no-store"});
   if(!r.ok)throw new Error("No se pudo cargar la referencia");
   marketData=await r.json();
-  setMarketReference(false);
+  // Solo completa el mercado si el vehículo todavía no tiene un valor guardado.
+  const saved=vehicleStates[activeVehicle];
+  if(!saved || saved.market===undefined || saved.market==="" || Number(saved.market)===0)setMarketReference(false);
+  else setMarketReference(false);
   calculate();
  }catch(e){
   $("marketMeta").textContent="No se pudo cargar el archivo de referencias. Podés ingresar el valor manualmente.";
@@ -35,28 +85,63 @@ function calculate(){
  const acquisition=offer+commission+contribution;
  const extras=num("repairs")+num("registration")+num("gnc")+num("insurance")+num("other");
  const reserve=num("reserve"), allIn=acquisition+extras+reserve, usdRate=num("usdRate");
- $("basePrice").textContent=fmt(vehicles[$("vehicle").value].base);
+ updateBasePrice();
  $("deposit").textContent=fmt(deposit);$("commission").textContent=fmt(commission);$("contribution").textContent=fmt(contribution);
  $("initial").textContent=fmt(initial);$("balance").textContent=fmt(balance);
  $("acquisition").textContent=fmt(acquisition);$("extras").textContent=fmt(extras+reserve);
  $("allIn").textContent=fmt(allIn);$("usd").textContent=usdRate?new Intl.NumberFormat("es-AR",{maximumFractionDigits:0}).format(allIn/usdRate):"—";
  const market=num("market"), discount=num("discount")/100;
- const max=(market*(1-discount)-extras-reserve)/(1+commRate*(1+contribRate));
+ const chargeFactor=1+commRate*(1+contribRate);
+ const max=(market*(1-discount)-extras-reserve)/chargeFactor;
+ const base=vehicles[$("vehicle").value].base;
+ const requiredDiscount=market>0 ? 1-((base*chargeFactor+extras+reserve)/market) : null;
  if(market>0){
-   $("maxBid").textContent=fmt(Math.max(0,max));
-   const margin=market-allIn;
-   if(offer<=max){$("status").className="status good";$("status").textContent=`Dentro del objetivo: diferencia frente al mercado ${fmt(margin)}.`;}
-   else{$("status").className="status bad";$("status").textContent=`Supera la puja máxima por ${fmt(offer-max)}.`;}
+  if(requiredDiscount<=0){
+   $("baseDiscount").textContent="0%";
+   $("baseDiscountNote").textContent=`La base ya es viable con descuento 0%. Incluso queda un margen estimado de ${fmt(market-(base*chargeFactor+extras+reserve))}.`;
+  }else if(requiredDiscount>1){
+   $("baseDiscount").textContent=`${(requiredDiscount*100).toFixed(1).replace(".",",")}%`;
+   $("baseDiscountNote").textContent="El descuento necesario supera el 100%: la base no resulta viable frente al mercado estimado, incluso llevando el descuento al máximo.";
+  }else{
+   $("baseDiscount").textContent=`${(requiredDiscount*100).toFixed(1).replace(".",",")}%`;
+   $("baseDiscountNote").textContent=`Con este descuento, la puja máxima queda aproximadamente en la base del lote (${fmt(base)}), incluyendo los cargos y costos adicionales cargados.`;
+  }
+  $("adjustDiscount").disabled=requiredDiscount>1;
+ }else{
+  $("baseDiscount").textContent="—";
+  $("baseDiscountNote").textContent="Ingresá un valor de mercado para calcular el descuento necesario.";
+  $("adjustDiscount").disabled=true;
+ }
+ if(market>0){
+  $("maxBid").textContent=fmt(Math.max(0,max));
+  const margin=market-allIn;
+  if(offer<=max){$("status").className="status good";$("status").textContent=`Dentro del objetivo: diferencia frente al mercado ${fmt(margin)}.`;}
+  else{$("status").className="status bad";$("status").textContent=`Supera la puja máxima por ${fmt(offer-max)}.`;}
  }else{$("maxBid").textContent="Ingresá un valor de mercado para calcularlo.";$("status").className="status neutral";$("status").textContent="Sin valor de mercado comparable.";}
- save();
+ saveVehicle();
 }
-load();
-$("vehicle").addEventListener("change",()=>{$("offer").value=vehicles[$("vehicle").value].base;setMarketReference(true);calculate();});
-ids.filter(id=>id!=="vehicle").forEach(id=>$(id).addEventListener("input",calculate));
+
+readStorage();
+$("vehicle").addEventListener("change",()=>{
+ // El evento se dispara cuando el select ya tiene el nuevo valor; guardar usando
+ // activeVehicle evita escribir los datos anteriores en el vehículo recién elegido.
+ saveVehicle();
+ activeVehicle=$("vehicle").value;
+ loadVehicle(activeVehicle);
+});
+ids.forEach(id=>$(id).addEventListener("input",calculate));
 $("useMarket").addEventListener("click",()=>{setMarketReference(true);calculate();});
 document.querySelectorAll("[data-add]").forEach(b=>b.addEventListener("click",()=>{$("offer").value=Math.max(0,num("offer")+Number(b.dataset.add));calculate();}));
 $("useBase").addEventListener("click",()=>{$("offer").value=vehicles[$("vehicle").value].base;calculate();});
+$("adjustDiscount").addEventListener("click",()=>{
+ const market=num("market");
+ if(!market)return;
+ const factor=1+(num("commissionRate")/100)*(1+num("contributionRate")/100);
+ const extras=num("repairs")+num("registration")+num("gnc")+num("insurance")+num("other")+num("reserve");
+ const required=1-((vehicles[$("vehicle").value].base*factor+extras)/market);
+ $("discount").value=Math.max(0,Math.min(100,required*100)).toFixed(1);
+ calculate();
+});
 $("roundOffer").addEventListener("click",()=>{$("offer").value=Math.round(num("offer")/100000)*100000;calculate();});
-calculate();
 loadMarketData();
 if("serviceWorker" in navigator && location.protocol.startsWith("http"))window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));

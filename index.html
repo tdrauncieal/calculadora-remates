@@ -69,7 +69,7 @@
       <div class="market-field"><label for="market">Valor de mercado comparable (ARS)</label><input id="market" type="number" inputmode="numeric" value="0"><div id="marketMeta" class="market-meta">Referencia de Mercado Libre.</div><button id="useMarket" class="secondary market-button" type="button">Usar mediana estimada</button></div>
     </div>
     <div class="two target">
-      <div><label for="discount">Descuento objetivo (%)</label><input id="discount" type="number" min="0" max="90" step="1" value="20"></div>
+      <div><label for="discount">Descuento objetivo (%)</label><input id="discount" type="number" min="0" max="100" step="0.1" value="20"></div>
       <div><label for="reserve">Reserva adicional</label><input id="reserve" type="number" inputmode="numeric" value="0"></div>
     </div>
   </section>
@@ -93,6 +93,12 @@
   <section class="panel">
     <div class="section-title">Límite según descuento de mercado</div>
     <div class="limit" id="maxBid">Ingresá un valor de mercado para calcularlo.</div>
+    <div class="break-even">
+      <div class="break-even-label">Descuento necesario para que la base sea viable</div>
+      <div class="break-even-value" id="baseDiscount">—</div>
+      <p class="hint" id="baseDiscountNote">Se calcula con la base del lote, los cargos del remate y los otros costos cargados.</p>
+      <button id="adjustDiscount" class="secondary market-button" type="button">Ajustar descuento a precio base</button>
+    </div>
     <p class="hint">La puja máxima se calcula descontando del valor de mercado el descuento objetivo y los gastos adicionales cargados, y luego dividiendo por el factor de cargos del remate.</p>
     <p class="hint">La referencia es una mediana de avisos publicados de Mercado Libre (snapshot 04/11/2026), no un precio de venta confirmado. Podés modificarla manualmente.</p>
     <div id="status" class="status neutral">Sin valor de mercado comparable.</div>

@@ -16,3 +16,22 @@ Referencia de mercado:
 
 La app guarda la configuración localmente en cada dispositivo (localStorage).
 Los datos no se sincronizan automáticamente entre dispositivos.
+
+Persistencia por vehículo:
+- Cada vehículo conserva su propia oferta, cargos, cotización, costos adicionales,
+  valor de mercado, descuento objetivo y reserva.
+- Al cambiar de vehículo se recuperan sus últimos valores guardados.
+- Los datos se almacenan en localStorage del navegador/dispositivo; no se sincronizan
+  automáticamente entre el iPhone y otros dispositivos.
+- Al actualizar desde una versión anterior, la configuración global existente se
+  migra al vehículo que estaba seleccionado al abrir la nueva versión por primera vez.
+
+
+Descuento de equilibrio para la base:
+- La app calcula el descuento necesario para que la puja máxima alcance la base
+  publicada, considerando honorarios, aporte y todos los costos adicionales cargados.
+- El botón "Ajustar descuento a precio base" actualiza el descuento del vehículo
+  seleccionado; se conserva de forma independiente para cada vehículo.
+- Si la base ya es viable con 0% de descuento, la app lo informa y permite ajustar a 0%.
+- Si el descuento necesario supera el 100%, informa que la base no es viable frente
+  al valor de mercado cargado.

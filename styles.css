@@ -10,3 +10,9 @@ select{margin-top:7px}.base-line,.total-line{display:flex;justify-content:space-
 
 .market-meta{color:var(--muted);font-size:12px;line-height:1.45;margin-top:8px}
 .market-button{margin-top:8px;border:1px solid #3a5273;background:#26364b;color:#eaf2ff;border-radius:9px;padding:10px 12px;font-size:12px;font-weight:700;width:100%}
+
+.break-even{border:1px solid #3a5273;background:#101c2d;border-radius:12px;padding:13px;margin:14px 0}
+.break-even-label{font-size:13px;color:#bdcbe0;font-weight:700}
+.break-even-value{font-size:25px;font-weight:850;color:var(--green);margin-top:6px}
+.break-even .hint{margin:6px 0 0}
+.market-button:disabled{opacity:.45;cursor:not-allowed}
