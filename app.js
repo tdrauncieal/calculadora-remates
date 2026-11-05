@@ -2,7 +2,7 @@ const vehicles={
  sonic:{base:7500000},ecosport:{base:11600000},tracker:{base:12000000},
  "p208-2016":{base:12500000},"p208-2022":{base:18000000}
 };
-const ids=["offer","depositRate","commissionRate","contributionRate","usdRate","repairs","registration","gnc","insurance","other","market","discount","reserve","mrpaValue"];
+const ids=["offer","depositRate","commissionRate","contributionRate","usdRate","repairs","registration","gnc","insurance","other","market","discount","reserve","mrpaValue","fiscalValue"];
 const $=id=>document.getElementById(id);
 const fmt=n=>new Intl.NumberFormat("es-AR",{style:"currency",currency:"ARS",maximumFractionDigits:0}).format(Math.round(Number.isFinite(n)?n:0));
 const num=id=>Math.max(0,Number($(id).value)||0);
@@ -12,6 +12,14 @@ let marketData=null;
 let activeVehicle=null;
 let defaults={};
 let vehicleStates={};
+const APP_VERSION="10.0.0";
+const fiscalDefaults={
+ sonic:7697200,
+ ecosport:0,
+ tracker:11668800,
+ "p208-2016":16743500,
+ "p208-2022":21401700
+};
 
 function readStorage(){
  ids.forEach(id=>defaults[id]=$(id).value);
@@ -46,8 +54,10 @@ function saveVehicle(){
 function loadVehicle(key){
  const state=vehicleStates[key]||{};
  ids.forEach(id=>$(id).value=state[id]!==undefined?state[id]:defaults[id]);
+ if(state.fiscalValue===undefined) $("fiscalValue").value=String(fiscalDefaults[key]||0);
  if(!vehicleStates[key]){
   $("offer").value=vehicles[key].base;
+  $("fiscalValue").value=String(fiscalDefaults[key]||0);
   const market=currentMarket();
   if(market)$("market").value=market.market;
  }
@@ -55,11 +65,18 @@ function loadVehicle(key){
  if(num("mrpaValue")<=0) $("mrpaValue").value="1027.50";
  $("registration").value=String(Math.round(90*num("mrpaValue")*100)/100);
  setMarketReference(false);
+ updateFiscalMeta();
  updateBasePrice();
  calculate();
 }
 function currentMarket(){return marketData?.vehicles?.[$("vehicle").value]||null;}
 function updateBasePrice(){$("basePrice").textContent=fmt(vehicles[$("vehicle").value].base);}
+function updateFiscalMeta(){
+ const key=$("vehicle").value;
+ const value=Number($("fiscalValue").value)||0;
+ const sourceDate="01/11/2026";
+ $("fiscalMeta").textContent=value>0?`Valor de tabla DNRPA (vigencia ${sourceDate}). Editable; no se suma automáticamente a los gastos.`:"Sin valuación identificada para esta versión/año en la tabla DNRPA. Cargar manualmente cuando se confirme.";
+}
 function setMarketReference(force=false){
  const m=currentMarket();
  if(!m)return;
@@ -112,7 +129,8 @@ $("vehicle").addEventListener("change",()=>{
  activeVehicle=$("vehicle").value;
  loadVehicle(activeVehicle);
 });
-ids.forEach(id=>$(id).addEventListener("input",calculate));
+ids.forEach(id=>$(id).addEventListener("input",()=>{if(id==="fiscalValue")updateFiscalMeta();calculate();}));
+$("appVersion").textContent=APP_VERSION;
 $("mrpaValue").addEventListener("input",()=>{
  const mrpa=num("mrpaValue");
  $("registration").value=(90*mrpa).toFixed(2);

@@ -20,3 +20,5 @@ input[readonly]{opacity:.88;border-style:dashed}
 
 .discount-button{margin-top:8px;width:100%;border:1px solid #3a5273;background:#26364b;color:#eaf2ff;border-radius:9px;padding:10px 12px;font-size:12px;font-weight:700}
 .discount-control{min-width:0}
+
+.discount-adjust-panel{display:block;margin-top:16px;padding:14px;border:1px solid #49658a;border-radius:12px;background:#101c2d}.discount-adjust-panel label{margin-top:0}.discount-button{display:block!important;visibility:visible!important;opacity:1!important;margin-top:10px!important;width:100%;min-height:48px;border:1px solid #78a9ff!important;background:#24466f!important;color:#fff!important;border-radius:10px;padding:12px;font-size:13px;font-weight:850;letter-spacing:.02em}.discount-adjust-panel .field-hint{margin-top:8px}

@@ -78,13 +78,18 @@
       <div class="market-field"><label for="market">Valor de mercado comparable (ARS)</label><input id="market" type="number" inputmode="numeric" value="0"><div id="marketMeta" class="market-meta">Referencia de Mercado Libre.</div><button id="useMarket" class="secondary market-button" type="button">Usar mediana estimada</button></div>
     </div>
     <div class="two target">
-      <div class="discount-control">
-        <label for="discount">Descuento objetivo (%)</label>
-        <input id="discount" type="number" min="0" max="90" step="1" value="20">
-        <button id="adjustDiscountToBase" class="secondary discount-button" type="button">Ajustar descuento a precio base</button>
-        <p class="field-hint">Calcula el descuento necesario para que la puja máxima sea igual a la base publicada, considerando los gastos cargados.</p>
+      <div>
+        <label for="fiscalValue">Valuación fiscal DNRPA (ARS)</label>
+        <input id="fiscalValue" type="number" inputmode="numeric" min="0" step="100" value="0">
+        <p id="fiscalMeta" class="field-hint">Valor de referencia DNRPA. EcoSport 1.5: sin valor 2017 identificado en la tabla.</p>
       </div>
       <div><label for="reserve">Reserva adicional</label><input id="reserve" type="number" inputmode="numeric" value="0"></div>
+    </div>
+    <div class="discount-adjust-panel">
+      <label for="discount">Descuento objetivo (%)</label>
+      <input id="discount" type="number" min="0" max="90" step="0.1" value="20">
+      <button id="adjustDiscountToBase" class="secondary discount-button" type="button">AJUSTAR DESCUENTO A PRECIO BASE</button>
+      <p class="field-hint">Calcula el descuento necesario para que la puja máxima coincida con la base publicada, considerando cargos y gastos cargados.</p>
     </div>
   </section>
 
@@ -124,7 +129,7 @@
   </section>
 </main>
 <footer>
-  Calculadora local · Los datos se guardan en este dispositivo.
+  Calculadora local · Versión <strong id="appVersion">10.0.0</strong> · Los datos se guardan en este dispositivo.
   <p class="field-hint">El botón «Borrar datos locales» elimina las configuraciones guardadas en este dispositivo, pero no desinstala la aplicación.</p>
 </footer>
 <script src="app.js"></script>
