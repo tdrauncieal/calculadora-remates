@@ -2,7 +2,7 @@ const vehicles={
  sonic:{base:7500000},ecosport:{base:11600000},tracker:{base:12000000},
  "p208-2016":{base:12500000},"p208-2022":{base:18000000}
 };
-const ids=["offer","depositRate","commissionRate","contributionRate","usdRate","repairs","registration","gnc","insurance","other","market","discount","reserve"];
+const ids=["offer","depositRate","commissionRate","contributionRate","usdRate","repairs","registration","gnc","insurance","other","market","discount","reserve","mrpaValue"];
 const $=id=>document.getElementById(id);
 const fmt=n=>new Intl.NumberFormat("es-AR",{style:"currency",currency:"ARS",maximumFractionDigits:0}).format(Math.round(Number.isFinite(n)?n:0));
 const num=id=>Math.max(0,Number($(id).value)||0);
@@ -51,6 +51,8 @@ function loadVehicle(key){
   const market=currentMarket();
   if(market)$("market").value=market.market;
  }
+ // Si existe una MRPA cargada, recalcular el patentamiento para este vehículo.
+ if(num("mrpaValue")>0) $("registration").value=String(Math.round(90*num("mrpaValue")));
  setMarketReference(false);
  updateBasePrice();
  calculate();
@@ -110,9 +112,21 @@ $("vehicle").addEventListener("change",()=>{
  loadVehicle(activeVehicle);
 });
 ids.forEach(id=>$(id).addEventListener("input",calculate));
+$("mrpaValue").addEventListener("input",()=>{
+ const mrpa=num("mrpaValue");
+ $("registration").value=String(Math.round(90*mrpa));
+ calculate();
+});
 $("useMarket").addEventListener("click",()=>{setMarketReference(true);calculate();});
 document.querySelectorAll("[data-add]").forEach(b=>b.addEventListener("click",()=>{$("offer").value=Math.max(0,num("offer")+Number(b.dataset.add));calculate();}));
 $("useBase").addEventListener("click",()=>{$("offer").value=vehicles[$("vehicle").value].base;calculate();});
 $("roundOffer").addEventListener("click",()=>{$("offer").value=Math.round(num("offer")/100000)*100000;calculate();});
+$("clearLocalData").addEventListener("click",()=>{
+ if(!window.confirm("¿Borrar todos los valores y configuraciones guardados de los cinco vehículos en este dispositivo? Esta acción no se puede deshacer."))return;
+ localStorage.removeItem(STORAGE_KEY);
+ localStorage.removeItem(SELECTED_KEY);
+ localStorage.removeItem("remates-state");
+ window.location.reload();
+});
 loadMarketData();
 if("serviceWorker" in navigator && location.protocol.startsWith("http"))window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));

@@ -36,3 +36,10 @@ Ingresar el valor vigente de una MRPA y, si se conoce, la valuacion oficial. Los
 
 INSCRIPCION INICIAL
 Para estimar patentamiento/inscripcion se tomara provisoriamente el encuadre de automotor subastado: 90 MRPA. El importe en pesos se carga manualmente en "Patentamiento / inscripcion". Confirmar con el Registro el encuadre y el valor vigente de MRPA antes de cerrar el presupuesto.
+
+
+CALCULO AUTOMATICO DE INSCRIPCION (90 MRPA)
+Ingresar el valor vigente en pesos de una MRPA en el campo correspondiente. El campo Patentamiento/inscripcion se calcula automaticamente como 90 x MRPA y se guarda por vehiculo. El anexo de aranceles suministrado indica 90 MRPA para automotores armados fuera de fabrica/subastados; confirmar encuadre con el Registro.
+
+BORRAR DATOS LOCALES
+El boton "Borrar datos locales de la calculadora" elimina las configuraciones guardadas de todos los vehiculos en el dispositivo actual (localStorage), previa confirmacion. No elimina la aplicacion ni los archivos cacheados.

@@ -11,3 +11,7 @@ select{margin-top:7px}.base-line,.total-line{display:flex;justify-content:space-
 .market-meta{color:var(--muted);font-size:12px;line-height:1.45;margin-top:8px}
 .market-button{margin-top:8px;border:1px solid #3a5273;background:#26364b;color:#eaf2ff;border-radius:9px;padding:10px 12px;font-size:12px;font-weight:700;width:100%}
 
+
+.field-hint{color:var(--muted);font-size:11px;line-height:1.4;margin:6px 0 0}
+input[readonly]{opacity:.88;border-style:dashed}
+.danger-button{display:block;width:100%;margin:14px 0 0;padding:11px 12px;border:1px solid #8b4148;border-radius:9px;background:#482326;color:#ffd8d8;font-size:13px;font-weight:750}
