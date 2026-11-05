@@ -52,7 +52,8 @@ function loadVehicle(key){
   if(market)$("market").value=market.market;
  }
  // Si existe una MRPA cargada, recalcular el patentamiento para este vehículo.
- if(num("mrpaValue")>0) $("registration").value=String(Math.round(90*num("mrpaValue")));
+ if(num("mrpaValue")<=0) $("mrpaValue").value="1027.50";
+ $("registration").value=String(Math.round(90*num("mrpaValue")*100)/100);
  setMarketReference(false);
  updateBasePrice();
  calculate();
@@ -114,7 +115,7 @@ $("vehicle").addEventListener("change",()=>{
 ids.forEach(id=>$(id).addEventListener("input",calculate));
 $("mrpaValue").addEventListener("input",()=>{
  const mrpa=num("mrpaValue");
- $("registration").value=String(Math.round(90*mrpa));
+ $("registration").value=(90*mrpa).toFixed(2);
  calculate();
 });
 $("useMarket").addEventListener("click",()=>{setMarketReference(true);calculate();});
@@ -122,7 +123,7 @@ document.querySelectorAll("[data-add]").forEach(b=>b.addEventListener("click",()
 $("useBase").addEventListener("click",()=>{$("offer").value=vehicles[$("vehicle").value].base;calculate();});
 $("roundOffer").addEventListener("click",()=>{$("offer").value=Math.round(num("offer")/100000)*100000;calculate();});
 $("clearLocalData").addEventListener("click",()=>{
- if(!window.confirm("¿Borrar todos los valores y configuraciones guardados de los cinco vehículos en este dispositivo? Esta acción no se puede deshacer."))return;
+ if(!window.confirm("¿Borrar todos los valores y configuraciones guardados de los cinco vehículos EN ESTE DISPOSITIVO? Esta acción no se puede deshacer."))return;
  localStorage.removeItem(STORAGE_KEY);
  localStorage.removeItem(SELECTED_KEY);
  localStorage.removeItem("remates-state");
