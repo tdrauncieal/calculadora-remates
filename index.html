@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#101827">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Remates">
+  <title>Calculadora de Remates</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <div class="eyebrow">HERRAMIENTA DE SUBASTA</div>
+  <h1>Calculadora de remates</h1>
+  <p>Calculá tu oferta, los pagos y el costo real de adquisición.</p>
+</header>
+<main>
+  <section class="panel">
+    <label for="vehicle">Vehículo</label>
+    <select id="vehicle">
+      <option value="sonic">Lote 03 · Chevrolet Sonic LTZ A/T 2015</option>
+      <option value="ecosport" selected>Lote 04 · Ford EcoSport Freestyle MT 2017</option>
+      <option value="tracker">Lote 05 · Chevrolet Tracker LTZ FWD 2017</option>
+      <option value="p208-2016">Lote 06 · Peugeot 208 Feline 1.6 2016</option>
+      <option value="p208-2022">Lote 07 · Peugeot 208 Feline Tiptronic 1.6 2022</option>
+    </select>
+    <div class="base-line"><span>Base publicada</span><strong id="basePrice">$11.600.000</strong></div>
+  </section>
+
+  <section class="panel">
+    <div class="section-title">Tu oferta</div>
+    <label for="offer">Precio de adjudicación (ARS)</label>
+    <input id="offer" type="number" inputmode="numeric" min="0" step="10000" value="11600000">
+    <div class="quick">
+      <button data-add="-500000">−$500 mil</button>
+      <button data-add="-100000">−$100 mil</button>
+      <button data-add="100000">+$100 mil</button>
+      <button data-add="500000">+$500 mil</button>
+    </div>
+    <div class="quick">
+      <button id="useBase" class="secondary">Usar precio base</button>
+      <button id="roundOffer" class="secondary">Redondear a $100 mil</button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="section-title">Cargos del remate</div>
+    <div class="two">
+      <div><label for="depositRate">Seña (%)</label><input id="depositRate" type="number" step="0.1" value="10"></div>
+      <div><label for="commissionRate">Honorarios (%)</label><input id="commissionRate" type="number" step="0.1" value="10"></div>
+      <div><label for="contributionRate">Aporte sobre honorarios (%)</label><input id="contributionRate" type="number" step="0.1" value="6"></div>
+      <div><label for="usdRate">Dólar ARS/USD</label><input id="usdRate" type="number" step="1" value="1500"></div>
+    </div>
+    <p class="hint">El aporte se calcula como porcentaje de los honorarios: 6% de 10% = 0,6% del precio. Podés modificar los valores si el pliego cambia.</p>
+  </section>
+
+  <section class="panel">
+    <div class="section-title">Otros costos (opcionales)</div>
+    <div class="two">
+      <div><label for="repairs">Reparaciones</label><input id="repairs" type="number" inputmode="numeric" value="0"></div>
+      <div><label for="registration">Patentamiento / trámites</label><input id="registration" type="number" inputmode="numeric" value="0"></div>
+      <div><label for="gnc">GNC</label><input id="gnc" type="number" inputmode="numeric" value="0"></div>
+      <div><label for="insurance">Seguro inicial</label><input id="insurance" type="number" inputmode="numeric" value="0"></div>
+      <div><label for="other">Otros gastos</label><input id="other" type="number" inputmode="numeric" value="0"></div>
+      <div><label for="market">Valor de mercado comparable</label><input id="market" type="number" inputmode="numeric" value="0"></div>
+    </div>
+    <div class="two target">
+      <div><label for="discount">Descuento objetivo (%)</label><input id="discount" type="number" min="0" max="90" step="1" value="20"></div>
+      <div><label for="reserve">Reserva adicional</label><input id="reserve" type="number" inputmode="numeric" value="0"></div>
+    </div>
+  </section>
+
+  <section class="result">
+    <div class="eyebrow">RESULTADO DE LA OFERTA</div>
+    <div class="result-label">Costo de adquisición (oferta + cargos)</div>
+    <div class="big" id="acquisition">$12.829.600</div>
+    <div class="result-grid">
+      <div><span>Seña</span><strong id="deposit">$1.160.000</strong></div>
+      <div><span>Honorarios</span><strong id="commission">$1.160.000</strong></div>
+      <div><span>Aporte</span><strong id="contribution">$69.600</strong></div>
+      <div><span>Pago inicial total</span><strong id="initial">$2.389.600</strong></div>
+      <div><span>Saldo del precio (90%)</span><strong id="balance">$10.440.000</strong></div>
+      <div><span>Gastos adicionales</span><strong id="extras">$0</strong></div>
+    </div>
+    <div class="total-line"><span>Inversión total estimada</span><strong id="allIn">$12.829.600</strong></div>
+    <div class="total-line"><span>Equivalente USD</span><strong id="usd">$8.553</strong></div>
+  </section>
+
+  <section class="panel">
+    <div class="section-title">Límite según descuento de mercado</div>
+    <div class="limit" id="maxBid">Ingresá un valor de mercado para calcularlo.</div>
+    <p class="hint">La puja máxima se calcula descontando del valor de mercado el descuento objetivo y los gastos adicionales cargados, y luego dividiendo por el factor de cargos del remate. No incluye reserva adicional dentro del descuento salvo que la cargues como otro gasto.</p>
+    <div id="status" class="status neutral">Sin valor de mercado comparable.</div>
+  </section>
+
+  <section class="panel notes">
+    <div class="section-title">Recordatorio de pago</div>
+    <ul>
+      <li><strong>Dentro de 24 horas hábiles administrativas:</strong> seña + honorarios + aporte.</li>
+      <li><strong>Dentro de 4 días hábiles administrativos:</strong> saldo del precio (90%).</li>
+      <li><strong>Después de acreditado y certificado el pago:</strong> 14 días hábiles para perfeccionar el patentamiento.</li>
+      <li>No se retira el vehículo hasta que esté inscripto a nombre del comprador.</li>
+    </ul>
+    <p class="warning">Verificá siempre el pliego vigente y los datos bancarios oficiales antes de transferir. La calculadora no realiza pagos ni verifica la adjudicación.</p>
+  </section>
+</main>
+<footer>Calculadora local · Los datos se guardan en este dispositivo.</footer>
+<script src="app.js"></script>
+</body>
+</html>
