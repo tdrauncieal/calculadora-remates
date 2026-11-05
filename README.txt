@@ -43,3 +43,14 @@ Ingresar el valor vigente en pesos de una MRPA en el campo correspondiente. El c
 
 BORRAR DATOS LOCALES
 El boton "Borrar datos locales de la calculadora" elimina las configuraciones guardadas de todos los vehiculos en el dispositivo actual (localStorage), previa confirmacion. No elimina la aplicacion ni los archivos cacheados.
+
+
+VERSION 12.0.0 - CALCULO DE INSCRIPCION CON BASE FISCAL
+- Selector de encuadre de arancel:
+  * Subastado: 90 MRPA (alternativa predeterminada).
+  * Porcentual: 1% de la mayor base entre precio de adquisicion con cargos del remate
+    y valuacion fiscal DNRPA, con minimo de 52 MRPA.
+- Los encuadres son alternativos y no se suman.
+- La valuacion fiscal no altera el valor de mercado ni la puja maxima.
+- Confirmar con el Registro el encuadre legal aplicable al lote y los impuestos
+  provinciales/municipales adicionales, que no quedan incluidos automaticamente.
