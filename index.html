@@ -78,7 +78,12 @@
       <div class="market-field"><label for="market">Valor de mercado comparable (ARS)</label><input id="market" type="number" inputmode="numeric" value="0"><div id="marketMeta" class="market-meta">Referencia de Mercado Libre.</div><button id="useMarket" class="secondary market-button" type="button">Usar mediana estimada</button></div>
     </div>
     <div class="two target">
-      <div><label for="discount">Descuento objetivo (%)</label><input id="discount" type="number" min="0" max="90" step="1" value="20"></div>
+      <div class="discount-control">
+        <label for="discount">Descuento objetivo (%)</label>
+        <input id="discount" type="number" min="0" max="90" step="1" value="20">
+        <button id="adjustDiscountToBase" class="secondary discount-button" type="button">Ajustar descuento a precio base</button>
+        <p class="field-hint">Calcula el descuento necesario para que la puja máxima sea igual a la base publicada, considerando los gastos cargados.</p>
+      </div>
       <div><label for="reserve">Reserva adicional</label><input id="reserve" type="number" inputmode="numeric" value="0"></div>
     </div>
   </section>

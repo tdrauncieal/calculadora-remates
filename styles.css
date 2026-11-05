@@ -17,3 +17,6 @@ input[readonly]{opacity:.88;border-style:dashed}
 .danger-button{display:block;width:100%;margin:14px 0 0;padding:11px 12px;border:1px solid #8b4148;border-radius:9px;background:#482326;color:#ffd8d8;font-size:13px;font-weight:750}
 
 .header-clear{display:inline-block;width:auto;margin:10px 0 0;padding:9px 12px}
+
+.discount-button{margin-top:8px;width:100%;border:1px solid #3a5273;background:#26364b;color:#eaf2ff;border-radius:9px;padding:10px 12px;font-size:12px;font-weight:700}
+.discount-control{min-width:0}

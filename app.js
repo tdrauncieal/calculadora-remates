@@ -119,6 +119,25 @@ $("mrpaValue").addEventListener("input",()=>{
  calculate();
 });
 $("useMarket").addEventListener("click",()=>{setMarketReference(true);calculate();});
+$("adjustDiscountToBase").addEventListener("click",()=>{
+ const market=num("market");
+ if(market<=0){
+  window.alert("Primero ingresá o cargá un valor de mercado comparable.");
+  return;
+ }
+ const base=vehicles[$("vehicle").value].base;
+ const commRate=num("commissionRate")/100;
+ const contribRate=num("contributionRate")/100;
+ const extras=num("repairs")+num("registration")+num("gnc")+num("insurance")+num("other")+num("reserve");
+ const factor=1+commRate*(1+contribRate);
+ const requiredDiscount=1-((base*factor+extras)/market);
+ if(requiredDiscount<0 || requiredDiscount>0.90){
+  window.alert(`Con los valores actuales no existe un descuento entre 0% y 90% que haga coincidir la puja máxima con la base. Descuento matemático requerido: ${(requiredDiscount*100).toFixed(1)}%.`);
+  return;
+ }
+ $("discount").value=(requiredDiscount*100).toFixed(1);
+ calculate();
+});
 document.querySelectorAll("[data-add]").forEach(b=>b.addEventListener("click",()=>{$("offer").value=Math.max(0,num("offer")+Number(b.dataset.add));calculate();}));
 $("useBase").addEventListener("click",()=>{$("offer").value=vehicles[$("vehicle").value].base;calculate();});
 $("roundOffer").addEventListener("click",()=>{$("offer").value=Math.round(num("offer")/100000)*100000;calculate();});
