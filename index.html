@@ -69,9 +69,35 @@
       <div class="market-field"><label for="market">Valor de mercado comparable (ARS)</label><input id="market" type="number" inputmode="numeric" value="0"><div id="marketMeta" class="market-meta">Referencia de Mercado Libre.</div><button id="useMarket" class="secondary market-button" type="button">Usar mediana estimada</button></div>
     </div>
     <div class="two target">
-      <div><label for="discount">Descuento objetivo (%)</label><input id="discount" type="number" min="0" max="100" step="0.1" value="20"></div>
+      <div><label for="discount">Descuento objetivo (%)</label><input id="discount" type="number" min="0" max="90" step="1" value="20"></div>
       <div><label for="reserve">Reserva adicional</label><input id="reserve" type="number" inputmode="numeric" value="0"></div>
     </div>
+  </section>
+
+  <section class="panel">
+    <div class="section-title">Simulador de inscripción inicial</div>
+    <p class="hint">Comparación provisoria de los dos encuadres del arancel. Ingresá el valor vigente de la MRPA. No presupone qué categoría aceptará el Registro.</p>
+    <div class="two">
+      <div><label for="mrpaValue">Valor de 1 MRPA (ARS)</label><input id="mrpaValue" type="number" inputmode="numeric" min="0" step="1" value="0"></div>
+      <div><label for="officialValuation">Valuación oficial (ARS)</label><input id="officialValuation" type="number" inputmode="numeric" min="0" step="10000" value="0"></div>
+    </div>
+    <div class="registration-scenarios">
+      <div class="registration-option">
+        <div class="registration-heading">A · Inscripción ordinaria</div>
+        <strong id="registrationA" class="registration-amount">Ingresá MRPA</strong>
+        <p id="registrationADetail" class="hint">1% de la mayor base aplicable, con mínimo de 52 MRPA.</p>
+        <button id="applyRegistrationA" class="secondary registration-button" type="button">Usar este importe</button>
+      </div>
+      <div class="registration-option">
+        <div class="registration-heading">B · Automotor subastado</div>
+        <strong id="registrationB" class="registration-amount">Ingresá MRPA</strong>
+        <p id="registrationBDetail" class="hint">Arancel fijo de 90 MRPA.</p>
+        <button id="applyRegistrationB" class="secondary registration-button" type="button">Usar este importe</button>
+      </div>
+    </div>
+    <div id="registrationComparison" class="status neutral">Ingresá el valor de la MRPA para comparar ambos escenarios.</div>
+    <p class="hint">El escenario A estima el 1% sobre el mayor entre oferta + cargos del remate y la valuación oficial, con mínimo de 52 MRPA. El escenario B calcula 90 MRPA. La categoría B del anexo menciona automotores armados fuera de fábrica/subastados; confirmar el encuadre con el Registro antes de tomarlo como costo definitivo.</p>
+  </section>
   </section>
 
   <section class="result">
@@ -93,12 +119,6 @@
   <section class="panel">
     <div class="section-title">Límite según descuento de mercado</div>
     <div class="limit" id="maxBid">Ingresá un valor de mercado para calcularlo.</div>
-    <div class="break-even">
-      <div class="break-even-label">Descuento necesario para que la base sea viable</div>
-      <div class="break-even-value" id="baseDiscount">—</div>
-      <p class="hint" id="baseDiscountNote">Se calcula con la base del lote, los cargos del remate y los otros costos cargados.</p>
-      <button id="adjustDiscount" class="secondary market-button" type="button">Ajustar descuento a precio base</button>
-    </div>
     <p class="hint">La puja máxima se calcula descontando del valor de mercado el descuento objetivo y los gastos adicionales cargados, y luego dividiendo por el factor de cargos del remate.</p>
     <p class="hint">La referencia es una mediana de avisos publicados de Mercado Libre (snapshot 04/11/2026), no un precio de venta confirmado. Podés modificarla manualmente.</p>
     <div id="status" class="status neutral">Sin valor de mercado comparable.</div>

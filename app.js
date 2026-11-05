@@ -2,7 +2,7 @@ const vehicles={
  sonic:{base:7500000},ecosport:{base:11600000},tracker:{base:12000000},
  "p208-2016":{base:12500000},"p208-2022":{base:18000000}
 };
-const ids=["offer","depositRate","commissionRate","contributionRate","usdRate","repairs","registration","gnc","insurance","other","market","discount","reserve"];
+const ids=["offer","depositRate","commissionRate","contributionRate","usdRate","repairs","registration","gnc","insurance","other","market","discount","reserve","mrpaValue","officialValuation"];
 const $=id=>document.getElementById(id);
 const fmt=n=>new Intl.NumberFormat("es-AR",{style:"currency",currency:"ARS",maximumFractionDigits:0}).format(Math.round(Number.isFinite(n)?n:0));
 const num=id=>Math.max(0,Number($(id).value)||0);
@@ -90,28 +90,37 @@ function calculate(){
  $("initial").textContent=fmt(initial);$("balance").textContent=fmt(balance);
  $("acquisition").textContent=fmt(acquisition);$("extras").textContent=fmt(extras+reserve);
  $("allIn").textContent=fmt(allIn);$("usd").textContent=usdRate?new Intl.NumberFormat("es-AR",{maximumFractionDigits:0}).format(allIn/usdRate):"—";
- const market=num("market"), discount=num("discount")/100;
- const chargeFactor=1+commRate*(1+contribRate);
- const max=(market*(1-discount)-extras-reserve)/chargeFactor;
- const base=vehicles[$("vehicle").value].base;
- const requiredDiscount=market>0 ? 1-((base*chargeFactor+extras+reserve)/market) : null;
- if(market>0){
-  if(requiredDiscount<=0){
-   $("baseDiscount").textContent="0%";
-   $("baseDiscountNote").textContent=`La base ya es viable con descuento 0%. Incluso queda un margen estimado de ${fmt(market-(base*chargeFactor+extras+reserve))}.`;
-  }else if(requiredDiscount>1){
-   $("baseDiscount").textContent=`${(requiredDiscount*100).toFixed(1).replace(".",",")}%`;
-   $("baseDiscountNote").textContent="El descuento necesario supera el 100%: la base no resulta viable frente al mercado estimado, incluso llevando el descuento al máximo.";
+ // Simulación de inscripción inicial según los dos encuadres del Anexo I.
+ const mrpa=num("mrpaValue"), officialValuation=num("officialValuation");
+ const registrationBase=Math.max(acquisition,officialValuation);
+ const registrationA=mrpa>0?Math.max(registrationBase*0.01,52*mrpa):null;
+ const registrationB=mrpa>0?90*mrpa:null;
+ if(mrpa>0){
+  $("registrationA").textContent=fmt(registrationA);
+  $("registrationADetail").textContent=`Base aplicada: ${fmt(registrationBase)} · 1% = ${fmt(registrationBase*0.01)} · mínimo: ${fmt(52*mrpa)} (52 MRPA).`;
+  $("registrationB").textContent=fmt(registrationB);
+  $("registrationBDetail").textContent=`90 MRPA × ${fmt(mrpa)} por MRPA.`;
+  const diff=Math.abs(registrationA-registrationB);
+  if(registrationA<registrationB){
+   $("registrationComparison").className="status good";
+   $("registrationComparison").textContent=`Escenario A sería ${fmt(diff)} más económico que el B.`;
+  }else if(registrationB<registrationA){
+   $("registrationComparison").className="status good";
+   $("registrationComparison").textContent=`Escenario B sería ${fmt(diff)} más económico que el A.`;
   }else{
-   $("baseDiscount").textContent=`${(requiredDiscount*100).toFixed(1).replace(".",",")}%`;
-   $("baseDiscountNote").textContent=`Con este descuento, la puja máxima queda aproximadamente en la base del lote (${fmt(base)}), incluyendo los cargos y costos adicionales cargados.`;
+   $("registrationComparison").className="status neutral";
+   $("registrationComparison").textContent="Ambos escenarios arrojan el mismo importe.";
   }
-  $("adjustDiscount").disabled=requiredDiscount>1;
  }else{
-  $("baseDiscount").textContent="—";
-  $("baseDiscountNote").textContent="Ingresá un valor de mercado para calcular el descuento necesario.";
-  $("adjustDiscount").disabled=true;
+  $("registrationA").textContent="Ingresá MRPA";
+  $("registrationB").textContent="Ingresá MRPA";
+  $("registrationADetail").textContent="1% de la mayor base aplicable, con mínimo de 52 MRPA.";
+  $("registrationBDetail").textContent="Arancel fijo de 90 MRPA.";
+  $("registrationComparison").className="status neutral";
+  $("registrationComparison").textContent="Ingresá el valor de la MRPA para comparar ambos escenarios.";
  }
+ const market=num("market"), discount=num("discount")/100;
+ const max=(market*(1-discount)-extras-reserve)/(1+commRate*(1+contribRate));
  if(market>0){
   $("maxBid").textContent=fmt(Math.max(0,max));
   const margin=market-allIn;
@@ -133,15 +142,19 @@ ids.forEach(id=>$(id).addEventListener("input",calculate));
 $("useMarket").addEventListener("click",()=>{setMarketReference(true);calculate();});
 document.querySelectorAll("[data-add]").forEach(b=>b.addEventListener("click",()=>{$("offer").value=Math.max(0,num("offer")+Number(b.dataset.add));calculate();}));
 $("useBase").addEventListener("click",()=>{$("offer").value=vehicles[$("vehicle").value].base;calculate();});
-$("adjustDiscount").addEventListener("click",()=>{
- const market=num("market");
- if(!market)return;
- const factor=1+(num("commissionRate")/100)*(1+num("contributionRate")/100);
- const extras=num("repairs")+num("registration")+num("gnc")+num("insurance")+num("other")+num("reserve");
- const required=1-((vehicles[$("vehicle").value].base*factor+extras)/market);
- $("discount").value=Math.max(0,Math.min(100,required*100)).toFixed(1);
+$("roundOffer").addEventListener("click",()=>{$("offer").value=Math.round(num("offer")/100000)*100000;calculate();});
+$("applyRegistrationA").addEventListener("click",()=>{
+ const mrpa=num("mrpaValue");
+ if(!mrpa){$("registrationComparison").className="status neutral";$("registrationComparison").textContent="Primero ingresá el valor de la MRPA.";return;}
+ const base=Math.max(num("offer")*(1+num("commissionRate")/100*(1+num("contributionRate")/100)),num("officialValuation"));
+ $("registration").value=Math.max(base*0.01,52*mrpa).toFixed(0);
  calculate();
 });
-$("roundOffer").addEventListener("click",()=>{$("offer").value=Math.round(num("offer")/100000)*100000;calculate();});
+$("applyRegistrationB").addEventListener("click",()=>{
+ const mrpa=num("mrpaValue");
+ if(!mrpa){$("registrationComparison").className="status neutral";$("registrationComparison").textContent="Primero ingresá el valor de la MRPA.";return;}
+ $("registration").value=(90*mrpa).toFixed(0);
+ calculate();
+});
 loadMarketData();
 if("serviceWorker" in navigator && location.protocol.startsWith("http"))window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));

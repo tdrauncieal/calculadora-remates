@@ -27,11 +27,8 @@ Persistencia por vehículo:
   migra al vehículo que estaba seleccionado al abrir la nueva versión por primera vez.
 
 
-Descuento de equilibrio para la base:
-- La app calcula el descuento necesario para que la puja máxima alcance la base
-  publicada, considerando honorarios, aporte y todos los costos adicionales cargados.
-- El botón "Ajustar descuento a precio base" actualiza el descuento del vehículo
-  seleccionado; se conserva de forma independiente para cada vehículo.
-- Si la base ya es viable con 0% de descuento, la app lo informa y permite ajustar a 0%.
-- Si el descuento necesario supera el 100%, informa que la base no es viable frente
-  al valor de mercado cargado.
+SIMULADOR DE INSCRIPCION INICIAL
+La aplicacion compara dos escenarios del Anexo I:
+A) 1% de la mayor base estimada (oferta + cargos del remate o valuacion oficial), con minimo de 52 MRPA.
+B) 90 MRPA para automotores armados fuera de fabrica/subastados.
+Ingresar el valor vigente de una MRPA y, si se conoce, la valuacion oficial. Los botones permiten copiar el importe de cada escenario al campo Patentamiento/tramites. Es una estimacion para comparar: confirmar con el Registro el encuadre aplicable y los conceptos que integran la base.
