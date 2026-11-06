@@ -54,3 +54,12 @@ VERSION 12.0.0 - CALCULO DE INSCRIPCION CON BASE FISCAL
 - La valuacion fiscal no altera el valor de mercado ni la puja maxima.
 - Confirmar con el Registro el encuadre legal aplicable al lote y los impuestos
   provinciales/municipales adicionales, que no quedan incluidos automaticamente.
+
+
+VERSION 13.0.0 - MEJORAS DE INTERFAZ Y COSTOS GLOBALES
+- La seccion Tu oferta queda inmediatamente despues del limite de mercado.
+- Descuento objetivo y boton de ajuste quedan dentro de Limite segun descuento de mercado.
+- El boton muestra el porcentaje calculado para llevar la puja maxima a la base.
+- La diferencia frente al mercado muestra importe y porcentaje sobre el valor de mercado.
+- GNC, Otros gastos y Reserva adicional se guardan globalmente y se comparten entre vehiculos.
+- Reparaciones, seguro, patentamiento, oferta, mercado y descuento siguen siendo por vehiculo.

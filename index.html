@@ -32,21 +32,6 @@
     <div class="base-line"><span>Base publicada</span><strong id="basePrice">$11.600.000</strong></div>
   </section>
 
-  <section class="panel">
-    <div class="section-title">Tu oferta</div>
-    <label for="offer">Precio de adjudicación (ARS)</label>
-    <input id="offer" type="number" inputmode="numeric" min="0" step="10000" value="11600000">
-    <div class="quick">
-      <button data-add="-500000">−$500 mil</button>
-      <button data-add="-100000">−$100 mil</button>
-      <button data-add="100000">+$100 mil</button>
-      <button data-add="500000">+$500 mil</button>
-    </div>
-    <div class="quick">
-      <button id="useBase" class="secondary">Usar precio base</button>
-      <button id="roundOffer" class="secondary">Redondear a $100 mil</button>
-    </div>
-  </section>
 
   <section class="panel">
     <div class="section-title">Cargos del remate</div>
@@ -78,10 +63,10 @@
         <input id="mrpaValue" type="number" inputmode="decimal" min="0" step="0.01" value="1027.50">
         <p class="field-hint">Alternativa porcentual: se toma la mayor entre el precio de adquisición con cargos del remate y la valuación fiscal DNRPA; se aplica 1%, con mínimo de 52 MRPA. Alternativa subastado: 90 MRPA. Son encuadres alternativos, no se suman.</p>
       </div>
-      <div><label for="gnc">GNC</label><input id="gnc" type="number" inputmode="numeric" value="0"></div>
+      <div class="global-cost"><label for="gnc">GNC · global</label><input id="gnc" type="number" inputmode="numeric" value="0"><p class="field-hint">Se comparte entre todos los vehículos.</p></div>
       <div><label for="insurance">Seguro inicial</label><input id="insurance" type="number" inputmode="numeric" value="0"></div>
-      <div><label for="other">Otros gastos</label><input id="other" type="number" inputmode="numeric" value="0"></div>
-      <div><label for="reserve">Reserva adicional</label><input id="reserve" type="number" inputmode="numeric" value="0"></div>
+      <div class="global-cost"><label for="other">Otros gastos · global</label><input id="other" type="number" inputmode="numeric" value="0"><p class="field-hint">Se comparte entre todos los vehículos.</p></div>
+      <div class="global-cost"><label for="reserve">Reserva adicional · global</label><input id="reserve" type="number" inputmode="numeric" value="0"><p class="field-hint">Se comparte entre todos los vehículos.</p></div>
     </div>
     <div class="two target">
       <div>
@@ -102,12 +87,7 @@
       <button id="useMarket" class="secondary market-button" type="button">Usar mediana estimada</button>
       <p class="field-hint">Este es el único valor utilizado para medir la conveniencia de la compra y calcular la puja máxima. La valuación fiscal DNRPA no lo reemplaza ni lo modifica.</p>
     </div>
-    <div class="discount-adjust-panel">
-      <label for="discount">Descuento objetivo (%)</label>
-      <input id="discount" type="number" min="0" max="90" step="0.1" value="20">
-      <button id="adjustDiscountToBase" class="secondary discount-button" type="button">AJUSTAR DESCUENTO A PRECIO BASE</button>
-      <p class="field-hint">Calcula el descuento necesario para que la puja máxima coincida con la base publicada, considerando cargos y gastos cargados.</p>
-    </div>
+
   </section>
 
   <section class="result">
@@ -132,6 +112,28 @@
     <p class="hint">La puja máxima se calcula descontando del valor de mercado el descuento objetivo y los gastos adicionales cargados, y luego dividiendo por el factor de cargos del remate.</p>
     <p class="hint">La referencia es una mediana de avisos publicados de Mercado Libre (snapshot 04/11/2026), no un precio de venta confirmado. Podés modificarla manualmente.</p>
     <div id="status" class="status neutral">Sin valor de mercado comparable.</div>
+    <div class="discount-adjust-panel">
+      <label for="discount">Descuento objetivo (%)</label>
+      <input id="discount" type="number" min="0" max="90" step="0.1" value="20">
+      <button id="adjustDiscountToBase" class="secondary discount-button" type="button">AJUSTAR DESCUENTO (—%) A PRECIO BASE</button>
+      <p class="field-hint">Calcula el descuento necesario para que la puja máxima coincida con la base publicada, considerando cargos y gastos cargados.</p>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="section-title">Tu oferta</div>
+    <label for="offer">Precio de adjudicación (ARS)</label>
+    <input id="offer" type="number" inputmode="numeric" min="0" step="10000" value="11600000">
+    <div class="quick">
+      <button data-add="-500000">−$500 mil</button>
+      <button data-add="-100000">−$100 mil</button>
+      <button data-add="100000">+$100 mil</button>
+      <button data-add="500000">+$500 mil</button>
+    </div>
+    <div class="quick">
+      <button id="useBase" class="secondary">Usar precio base</button>
+      <button id="roundOffer" class="secondary">Redondear a $100 mil</button>
+    </div>
   </section>
 
   <section class="panel notes">
