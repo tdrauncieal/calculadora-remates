@@ -63,3 +63,11 @@ VERSION 13.0.0 - MEJORAS DE INTERFAZ Y COSTOS GLOBALES
 - La diferencia frente al mercado muestra importe y porcentaje sobre el valor de mercado.
 - GNC, Otros gastos y Reserva adicional se guardan globalmente y se comparten entre vehiculos.
 - Reparaciones, seguro, patentamiento, oferta, mercado y descuento siguen siendo por vehiculo.
+
+
+VERSION 14.0.0 - SELECTOR DE VEHICULO STICKY
+- El panel de seleccion del vehiculo queda fijo arriba al llegar al borde superior.
+- Las secciones de configuracion (cargos del remate y otros costos) se desplazan por debajo
+  del selector y quedan ocultas a medida que se avanza.
+- El comportamiento sticky se limita al bloque de configuracion y se libera al llegar
+  a RESULTADO DE LA OFERTA; desde alli el desplazamiento vuelve a ser normal.

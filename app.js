@@ -14,7 +14,7 @@ let marketData=null;
 let activeVehicle=null;
 let defaults={};
 let vehicleStates={};
-const APP_VERSION="13.0.0";
+const APP_VERSION="14.0.0";
 const fiscalDefaults={
  sonic:7697200,
  ecosport:0,

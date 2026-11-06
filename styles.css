@@ -27,3 +27,16 @@ input[readonly]{opacity:.88;border-style:dashed}
 .global-cost{padding:8px;border:1px solid #354b68;border-radius:10px;background:#101c2d;margin:6px 0}
 .global-cost label{margin-top:2px}
 .discount-adjust-panel{margin-top:16px}
+
+
+/* v14: selector de vehículo fijo durante el desplazamiento de la configuración */
+.setup-scroll-zone{position:relative}
+.vehicle-sticky{
+  position:sticky;
+  top:0;
+  z-index:30;
+  background:#151f30;
+  border-color:#49658a;
+  box-shadow:0 8px 20px rgba(0,0,0,.38);
+}
+/* El contenedor termina justo antes del resultado: allí se libera el sticky. */
