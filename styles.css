@@ -56,3 +56,11 @@ input[readonly]{opacity:.88;border-style:dashed}
 .result-endpoints .total-line{margin-top:8px;padding-top:8px}
 .result-sticky.is-compact .result-endpoints .total-line{margin-top:5px;padding-top:6px}
 .result-sticky.is-compact .result-label{margin-top:7px}
+
+
+/* v19.0.1: evita que el colapso del resultado provoque anclajes y saltos
+   de scroll. La compactación no anima propiedades que alteran el umbral sticky. */
+.setup-scroll-zone,.result-sticky{overflow-anchor:none}
+.result-sticky{will-change:transform}
+.result-sticky .result-grid{transition:opacity .12s ease}
+.result-sticky.is-compact .result-grid{transition:opacity .12s ease}

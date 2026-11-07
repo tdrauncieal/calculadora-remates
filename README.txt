@@ -79,3 +79,13 @@ Versión 18.0.0
 - El resultado suma un segundo bloqueo debajo del selector; al fijarse, oculta los campos intermedios y conserva los extremos: costo de adquisición (oferta + cargos), inversión total estimada y equivalente USD.
 - Ambos bloqueos se liberan al llegar al final del contenedor que agrupa configuración y resultado.
 - Patentamiento para lotes subastados: exclusivamente 90 MRPA; valuación fiscal informativa.
+
+
+VERSION 19.0.1 - ESTABILIDAD DEL BLOQUEO DEL RESULTADO
+- Parte de la versión 18; no incorpora los cambios de la v19 de límite de mercado.
+- La compactación del resultado utiliza un umbral estable y una histéresis al volver hacia arriba.
+- Las actualizaciones de scroll se agrupan mediante requestAnimationFrame para evitar
+  alternancias repetidas del estado en el límite sticky.
+- Se desactiva el scroll anchoring en la zona y el resultado para reducir saltos al colapsar.
+- Se conserva el comportamiento visual de v18: extremos del resultado visibles y
+  campos intermedios ocultos durante el bloqueo.

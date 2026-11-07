@@ -14,7 +14,7 @@ let marketData=null;
 let activeVehicle=null;
 let defaults={};
 let vehicleStates={};
-const APP_VERSION="18.0.0";
+const APP_VERSION="19.0.1";
 const fiscalDefaults={
  sonic:7697200,
  ecosport:0,
@@ -150,8 +150,10 @@ function calculate(){
  saveVehicle();
 }
 
-// Sticky secuencial: el selector permanece fijo y el resultado se compacta
-// al llegar debajo de él. Ambos se liberan al terminar setup-scroll-zone.
+// Sticky estable: compacta el resultado una sola vez al alcanzar su umbral.
+// Se usa histéresis al volver hacia arriba para evitar oscilaciones en el borde.
+let resultIsCompact=false;
+let stickyFramePending=false;
 function updateStickyLayout(){
  const vehicle=document.querySelector(".vehicle-sticky");
  if(!vehicle)return;
@@ -164,13 +166,29 @@ function updateResultCompact(){
  const result=document.querySelector(".result-sticky");
  const zone=document.querySelector(".setup-scroll-zone");
  if(!vehicle||!result||!zone)return;
- const offset=vehicle.getBoundingClientRect().height;
- const r=result.getBoundingClientRect();
- const zoneRect=zone.getBoundingClientRect();
- const shouldCompact=r.top<=offset+3 && zoneRect.bottom>offset+30;
- result.classList.toggle("is-compact",shouldCompact);
+ const stickyTop=Math.ceil(vehicle.getBoundingClientRect().height)+8;
+ const resultTop=result.getBoundingClientRect().top;
+ const zoneBottom=zone.getBoundingClientRect().bottom;
+ const shouldRelease=zoneBottom<=stickyTop+32;
+ if(!resultIsCompact && resultTop<=stickyTop+2){
+   resultIsCompact=true;
+ }else if(resultIsCompact && resultTop>stickyTop+26){
+   // Se libera al desplazarse hacia arriba, con margen para evitar rebotes.
+   resultIsCompact=false;
+ }
+ // El límite del sticky lo gestiona el propio contenedor; no alternar el estado
+ // por cambios de altura del resultado cuando llega al final de la zona.
+ if(shouldRelease && window.scrollY < (document.documentElement.scrollHeight-window.innerHeight-2)){
+   // No forzar cambios: el navegador libera ambos sticky al terminar el contenedor.
+ }
+ result.classList.toggle("is-compact",resultIsCompact);
 }
-window.addEventListener("scroll",updateResultCompact,{passive:true});
+function scheduleStickyUpdate(){
+ if(stickyFramePending)return;
+ stickyFramePending=true;
+ requestAnimationFrame(()=>{stickyFramePending=false;updateResultCompact();});
+}
+window.addEventListener("scroll",scheduleStickyUpdate,{passive:true});
 window.addEventListener("resize",updateStickyLayout);
 if("ResizeObserver" in window){
  const stickyObserver=new ResizeObserver(updateStickyLayout);
