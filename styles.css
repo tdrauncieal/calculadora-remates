@@ -39,4 +39,20 @@ input[readonly]{opacity:.88;border-style:dashed}
   border-color:#49658a;
   box-shadow:0 8px 20px rgba(0,0,0,.38);
 }
-/* El contenedor termina justo antes del resultado: allí se libera el sticky. */
+/* El contenedor agrupa selector, configuración y resultado para delimitar el sticky. */
+
+
+/* v18: bloqueo sticky secuencial con resultado comprimible. */
+:root{--vehicle-sticky-height:120px}
+.setup-scroll-zone{position:relative;overflow:visible}
+.vehicle-sticky{top:0}
+.result-sticky{position:sticky;top:calc(var(--vehicle-sticky-height) + 8px);z-index:20;transform:translateZ(0);transition:padding .18s ease,margin .18s ease}
+.result-sticky.is-compact{padding-top:12px;padding-bottom:12px;margin-top:8px;margin-bottom:8px}
+.result-sticky .result-grid{transition:opacity .14s ease,max-height .18s ease,margin .18s ease;max-height:360px;opacity:1;overflow:hidden}
+.result-sticky.is-compact .result-grid{max-height:0;opacity:0;margin:0;gap:0}
+.result-sticky .big{transition:font-size .18s ease,margin .18s ease}
+.result-sticky.is-compact .big{font-size:clamp(25px,6vw,32px);margin:3px 0 8px}
+.result-endpoints{display:grid;gap:0}
+.result-endpoints .total-line{margin-top:8px;padding-top:8px}
+.result-sticky.is-compact .result-endpoints .total-line{margin-top:5px;padding-top:6px}
+.result-sticky.is-compact .result-label{margin-top:7px}

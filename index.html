@@ -50,19 +50,14 @@
     <div class="two">
       <div><label for="repairs">Reparaciones</label><input id="repairs" type="number" inputmode="numeric" value="0"></div>
       <div>
-        <label for="registrationMode">Criterio de arancel de inscripción inicial</label>
-        <select id="registrationMode">
-          <option value="auction">Vehículo subastado: 90 MRPA</option>
-          <option value="percentage">Arancel porcentual: 1% de la mayor base (mínimo 52 MRPA)</option>
-        </select>
         <label for="registration">Patentamiento / inscripción estimado (ARS)</label>
         <input id="registration" type="number" inputmode="numeric" value="0" readonly>
-        <p id="registrationMeta" class="field-hint">El importe se calcula según el encuadre seleccionado. La valuación fiscal se utiliza en la alternativa porcentual.</p>
+        <p id="registrationMeta" class="field-hint">Arancel fijo para vehículos subastados: 90 MRPA.</p>
       </div>
       <div>
         <label for="mrpaValue">Valor vigente de 1 MRPA (ARS)</label>
         <input id="mrpaValue" type="number" inputmode="decimal" min="0" step="0.01" value="1027.50">
-        <p class="field-hint">Alternativa porcentual: se toma la mayor entre el precio de adquisición con cargos del remate y la valuación fiscal DNRPA; se aplica 1%, con mínimo de 52 MRPA. Alternativa subastado: 90 MRPA. Son encuadres alternativos, no se suman.</p>
+        <p class="field-hint">Para estos lotes subastados se aplica exclusivamente el arancel fijo de 90 MRPA.</p>
       </div>
       <div class="global-cost"><label for="gnc">GNC · global</label><input id="gnc" type="number" inputmode="numeric" value="0"><p class="field-hint">Se comparte entre todos los vehículos.</p></div>
       <div><label for="insurance">Seguro inicial</label><input id="insurance" type="number" inputmode="numeric" value="0"></div>
@@ -91,9 +86,8 @@
 
   </section>
 
-  </div><!-- cierre de setup-scroll-zone -->
 
-  <section class="result">
+  <section class="result result-sticky">
     <div class="eyebrow">RESULTADO DE LA OFERTA</div>
     <div class="result-label">Costo de adquisición (oferta + cargos)</div>
     <div class="big" id="acquisition">$12.829.600</div>
@@ -105,9 +99,12 @@
       <div><span>Saldo del precio (90%)</span><strong id="balance">$10.440.000</strong></div>
       <div><span>Gastos adicionales</span><strong id="extras">$0</strong></div>
     </div>
-    <div class="total-line"><span>Inversión total estimada</span><strong id="allIn">$12.829.600</strong></div>
-    <div class="total-line"><span>Equivalente USD</span><strong id="usd">$8.553</strong></div>
+    <div class="result-endpoints">
+      <div class="total-line"><span>Inversión total estimada</span><strong id="allIn">$12.829.600</strong></div>
+      <div class="total-line"><span>Equivalente USD</span><strong id="usd">$8.553</strong></div>
+    </div>
   </section>
+  </div><!-- cierre de setup-scroll-zone -->
 
   <section class="panel">
     <div class="section-title">Límite según descuento de mercado</div>
@@ -151,7 +148,7 @@
   </section>
 </main>
 <footer>
-  Calculadora local · Versión <strong id="appVersion">11.0.0</strong> · Los datos se guardan en este dispositivo.
+  Calculadora local · Versión <strong id="appVersion">18.0.0</strong> · Los datos se guardan en este dispositivo.
   <p class="field-hint">El botón «Borrar datos locales» elimina las configuraciones guardadas en este dispositivo, pero no desinstala la aplicación.</p>
 </footer>
 <script src="app.js"></script>

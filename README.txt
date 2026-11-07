@@ -71,3 +71,11 @@ VERSION 14.0.0 - SELECTOR DE VEHICULO STICKY
   del selector y quedan ocultas a medida que se avanza.
 - El comportamiento sticky se limita al bloque de configuracion y se libera al llegar
   a RESULTADO DE LA OFERTA; desde alli el desplazamiento vuelve a ser normal.
+
+
+Versión 18.0.0
+- Basada en la estructura de v14.
+- El selector de vehículo permanece sticky al alcanzar el bloque de resultado.
+- El resultado suma un segundo bloqueo debajo del selector; al fijarse, oculta los campos intermedios y conserva los extremos: costo de adquisición (oferta + cargos), inversión total estimada y equivalente USD.
+- Ambos bloqueos se liberan al llegar al final del contenedor que agrupa configuración y resultado.
+- Patentamiento para lotes subastados: exclusivamente 90 MRPA; valuación fiscal informativa.

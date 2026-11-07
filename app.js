@@ -2,7 +2,7 @@ const vehicles={
  sonic:{base:7500000},ecosport:{base:11600000},tracker:{base:12000000},
  "p208-2016":{base:12500000},"p208-2022":{base:18000000}
 };
-const ids=["offer","depositRate","commissionRate","contributionRate","usdRate","repairs","registration","insurance","market","discount","mrpaValue","fiscalValue","registrationMode"];
+const ids=["offer","depositRate","commissionRate","contributionRate","usdRate","repairs","registration","insurance","market","discount","mrpaValue","fiscalValue"];
 const $=id=>document.getElementById(id);
 const fmt=n=>new Intl.NumberFormat("es-AR",{style:"currency",currency:"ARS",maximumFractionDigits:0}).format(Math.round(Number.isFinite(n)?n:0));
 const num=id=>Math.max(0,Number($(id).value)||0);
@@ -14,7 +14,7 @@ let marketData=null;
 let activeVehicle=null;
 let defaults={};
 let vehicleStates={};
-const APP_VERSION="14.0.0";
+const APP_VERSION="18.0.0";
 const fiscalDefaults={
  sonic:7697200,
  ecosport:0,
@@ -71,7 +71,6 @@ function loadVehicle(key){
  const state=vehicleStates[key]||{};
  ids.forEach(id=>$(id).value=state[id]!==undefined?state[id]:defaults[id]);
  if(state.fiscalValue===undefined) $("fiscalValue").value=String(fiscalDefaults[key]||0);
- if(state.registrationMode===undefined) $("registrationMode").value="auction";
  if(!vehicleStates[key]){
   $("offer").value=vehicles[key].base;
   $("fiscalValue").value=String(fiscalDefaults[key]||0);
@@ -80,7 +79,6 @@ function loadVehicle(key){
  }
  // La opción por defecto para lotes subastados es 90 MRPA.
  if(num("mrpaValue")<=0) $("mrpaValue").value="1027.50";
- if(!$("registrationMode").value) $("registrationMode").value="auction";
  updateRegistrationEstimate();
  setMarketReference(false);
  updateFiscalMeta();
@@ -118,17 +116,9 @@ async function loadMarketData(){
 }
 function updateRegistrationEstimate(){
  const mrpa=num("mrpaValue");
- const mode=$("registrationMode").value||"auction";
- const auctionBasis=num("offer")*(1+num("commissionRate")/100*(1+num("contributionRate")/100));
- const fiscalBasis=num("fiscalValue");
- const base=Math.max(auctionBasis,fiscalBasis);
- const percentage=Math.max(52*mrpa,base*0.01);
  const auction=90*mrpa;
- const amount=mode==="percentage"?percentage:auction;
- $("registration").value=String(Math.round(amount*100)/100);
- $("registrationMeta").textContent=mode==="percentage"
-  ? `Base aplicada: ${fmt(base)} (mayor entre adquisición con cargos del remate ${fmt(auctionBasis)} y valuación fiscal ${fmt(fiscalBasis)}). Arancel: 1%, mínimo 52 MRPA (${fmt(52*mrpa)}).`
-  : `Arancel fijo estimado para subastado: 90 MRPA = ${fmt(auction)}. La valuación fiscal no modifica este arancel fijo; se usa en la alternativa porcentual.`;
+ $("registration").value=String(Math.round(auction*100)/100);
+ $("registrationMeta").textContent=`Arancel fijo para vehículo subastado: 90 MRPA = ${fmt(auction)}. La valuación fiscal se conserva solo como dato informativo.`;
 }
 function calculate(){
  const offer=num("offer"), depRate=num("depositRate")/100, commRate=num("commissionRate")/100, contribRate=num("contributionRate")/100;
@@ -160,6 +150,33 @@ function calculate(){
  saveVehicle();
 }
 
+// Sticky secuencial: el selector permanece fijo y el resultado se compacta
+// al llegar debajo de él. Ambos se liberan al terminar setup-scroll-zone.
+function updateStickyLayout(){
+ const vehicle=document.querySelector(".vehicle-sticky");
+ if(!vehicle)return;
+ const h=Math.ceil(vehicle.getBoundingClientRect().height);
+ document.documentElement.style.setProperty("--vehicle-sticky-height",`${h}px`);
+ updateResultCompact();
+}
+function updateResultCompact(){
+ const vehicle=document.querySelector(".vehicle-sticky");
+ const result=document.querySelector(".result-sticky");
+ const zone=document.querySelector(".setup-scroll-zone");
+ if(!vehicle||!result||!zone)return;
+ const offset=vehicle.getBoundingClientRect().height;
+ const r=result.getBoundingClientRect();
+ const zoneRect=zone.getBoundingClientRect();
+ const shouldCompact=r.top<=offset+3 && zoneRect.bottom>offset+30;
+ result.classList.toggle("is-compact",shouldCompact);
+}
+window.addEventListener("scroll",updateResultCompact,{passive:true});
+window.addEventListener("resize",updateStickyLayout);
+if("ResizeObserver" in window){
+ const stickyObserver=new ResizeObserver(updateStickyLayout);
+ stickyObserver.observe(document.querySelector(".vehicle-sticky"));
+}
+
 readStorage();
 $("vehicle").addEventListener("change",()=>{
  // El evento se dispara cuando el select ya tiene el nuevo valor; guardar usando
@@ -172,7 +189,6 @@ ids.forEach(id=>$(id).addEventListener("input",()=>{if(id==="fiscalValue")update
 globalIds.forEach(id=>$(id).addEventListener("input",()=>{localStorage.setItem(GLOBAL_KEY,JSON.stringify(Object.fromEntries(globalIds.map(k=>[k,$(k).value]))));calculate();}));
 $("appVersion").textContent=APP_VERSION;
 $("mrpaValue").addEventListener("input",calculate);
-$("registrationMode").addEventListener("change",calculate);
 $("useMarket").addEventListener("click",()=>{setMarketReference(true);calculate();});
 $("adjustDiscountToBase").addEventListener("click",()=>{
  const market=num("market");
@@ -205,4 +221,5 @@ $("clearLocalData").addEventListener("click",()=>{
  window.location.reload();
 });
 loadMarketData();
+updateStickyLayout();
 if("serviceWorker" in navigator && location.protocol.startsWith("http"))window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
